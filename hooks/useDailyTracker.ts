@@ -1,8 +1,9 @@
 // src/hooks/useDailyTracker.ts
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { FoodItem, initialFoodList } from '../services/foodData';
 import { useCalorieCalculator } from './useCalorieCalculator';
 import { User } from '../types/User';
+import { DailyRecord, UserHistory } from '../types/CalorieRecord';
 
 // Interfaz para un registro de alimento consumido
 export interface ConsumedFood {
@@ -10,6 +11,8 @@ export interface ConsumedFood {
     quantityG: number;
     totalCalories: number;
 }
+
+const HISTORY_KEY_PREFIX = 'nutri_history_';
 
 export const useDailyTracker = (user: User) => {
     // Lista de alimentos consumidos hoy (simulados)
@@ -25,6 +28,67 @@ export const useDailyTracker = (user: User) => {
         const goals = calculateGoals(user); 
         return goals;
     }, [user, calculateGoals]);
+
+    // ⭐️ NUEVO ESTADO: Historial de los últimos 5 días
+    const [history, setHistory] = useState<UserHistory>([]);
+
+    // ⭐️ EFECTO: Carga el historial del usuario al iniciar
+    useEffect(() => {
+        const key = HISTORY_KEY_PREFIX + user.name;
+        const storedHistory = localStorage.getItem(key);
+        if (storedHistory) {
+            // Asegura que solo se mantengan los últimos 5 días (o menos si hay menos)
+            const parsedHistory: UserHistory = JSON.parse(storedHistory);
+            setHistory(parsedHistory.slice(-5));
+        }
+    }, [user.name]);
+
+
+    // ⭐️ FUNCIÓN: Guardar el registro del día y actualizar el historial
+    const saveDailyRecord = (): boolean => {
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Evitar guardar si ya existe un registro para hoy (simulación)
+        if (history.some(record => record.date === today)) {
+             console.warn("Ya existe un registro para hoy.");
+             return false;
+        }
+
+        const newRecord: DailyRecord = {
+            date: today,
+            caloriesConsumed: totalConsumed,
+            macrosConsumed: totalMacros,
+        };
+        
+        // 1. Añadir el nuevo registro y limitar a 5 elementos
+        const updatedHistory = [...history, newRecord].slice(-5);
+        
+        // 2. Guardar en LocalStorage
+        const key = HISTORY_KEY_PREFIX + user.name;
+        localStorage.setItem(key, JSON.stringify(updatedHistory));
+        
+        // 3. Actualizar el estado local
+        setHistory(updatedHistory);
+
+        // 4. (Opcional): Resetear el consumedList después de guardar
+        // setConsumedList([]); 
+        
+        return true;
+    };
+
+    // ⭐️ MODIFICACIÓN: historyData ahora usa el historial real
+    const historyData = useMemo(() => {
+        // Mapear los últimos 5 registros guardados para la visualización de la gráfica
+        if (history.length === 0) {
+            return [];
+        }
+        
+        return history.map(record => ({
+            day: record.date.substring(5), // Solo mes y día
+            calories: record.caloriesConsumed,
+            // Añadir un identificador para la gráfica si es necesario
+        }));
+    }, [history]);
 
 
     // Función para registrar un alimento consumido
@@ -85,11 +149,11 @@ export const useDailyTracker = (user: User) => {
     }, [totalConsumed, calorieGoal]);
 
     // Simulación de historial para la gráfica de barras
-    const historyData = [
+    /*const historyData = [
         { day: '2 days ago', calories: calorieGoal * 0.8 },
         { day: 'Yesterday', calories: calorieGoal * 0.9 },
         { day: 'Today', calories: totalConsumed },
-    ];
+    ];*/
 
     return {
         totalConsumed,
@@ -98,6 +162,8 @@ export const useDailyTracker = (user: User) => {
         removeFood,
         motivationalMessage,
         foodCatalog: initialFoodList,
+        saveDailyRecord,
+        history,
         historyData,
         /*totalMacros*/
         macroConsumed: totalMacros,

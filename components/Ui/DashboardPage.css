@@ -210,38 +210,119 @@ span{
 }
 
 .bar {
-    width: 25px;
-    background-color: #3b82f6; /* Color azul */
+    width: 25px; 
+    background-color: #3b82f6; 
     border-radius: 4px;
     transition: height 0.5s;
-    font-size: 0.6rem;
-    text-align: center;
-    color: white;
+    /* La altura es controlada por el style en el componente React */
+    margin-bottom: 3px; /* Espacio entre la barra y la etiqueta */
 }
 
 .bar-chart-visualization {
-    height: 100px; /* Espacio para las barras */
+    min-height: 80px; /* Garantiza altura para el mensaje o las barras */
     display: flex;
-    align-items: flex-end;
+    align-items: flex-end; /* Alinea las barras a la parte inferior del contenedor */
     gap: 0.5rem;
     justify-content: space-around;
-    padding-top: 10px;
-    flex-grow: 1; /* Permite que el contenedor de barras ocupe el espacio antes del botón */
+    padding: 10px 0; /* Espacio superior e inferior */
+    flex-grow: 1; 
+    height: 100px; /* Altura de referencia */
 }
 
-.view-history-btn {
+/* ⭐️ NUEVO: Contenedor de cada barra y su etiqueta ⭐️ */
+.bar-column {
+    display: flex;
+    flex-direction: column; /* Apila los elementos verticalmente */
+    align-items: center; /* Centra la barra y la etiqueta horizontalmente */
+    width: 40px; /* Ancho fijo para cada columna de barra */
+    text-align: center;
+}
+
+.bar-label {
+    font-size: 0.7rem;
+    color: #666;
+    /* Evita que las etiquetas largas causen problemas de alineación */
+    white-space: nowrap; 
+}
+
+.history-buttons-group {
+    /* Contenedor que alinea los dos botones horizontalmente */
+    display: flex;
+    justify-content: center; /* Centra el grupo de botones dentro del panel */
+    gap: 0.5rem; /* Espacio entre los botones */
+    margin-top: 0.8rem;
+    width: 100%; /* Ocupa el ancho del contenedor centrado */
+}
+
+/*.view-history-btn {
     width: 60%;
     padding: 0.5rem;
     background-color: #3b82f6; /* Azul */
-    color: white;
+    /*color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 500;
     margin-top: 0.5rem; /* Espacio superior */
 
-    margin-left: auto; 
+    /*margin-left: auto; 
     margin-right: auto;
+}*/
+
+/* Redefinición de botones para que coexistan */
+.save-info-btn,
+.view-history-btn {
+    padding: 0.5rem 0.8rem;
+    background-color: #f7a04c; /* Naranja/Ámbar para Guardar */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    width: 45%; /* Cada botón ocupa casi la mitad del espacio */
+    max-width: 180px; 
+    transition: background-color 0.3s;
+}
+
+.view-history-btn {
+    background-color: #3b82f6; /* Azul para Ver Historial */
+}
+
+.save-info-btn:hover {
+    background-color: #e58d3f;
+}
+
+.view-history-btn:hover {
+    background-color: #2c73d9;
+}
+
+/* Estilo para el mensaje "No disponible" */
+.no-history-message {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+    padding: 1rem;
+    height: 100%;
+}
+
+.calorie-tooltip {
+    /* Posicionamiento absoluto y alto z-index para que flote sobre todo */
+    position: fixed; /* O 'absolute' si el contenedor principal tiene position: relative */
+    z-index: 1000;
+    
+    /* Estilos visuales */
+    background-color: #60be6d;
+    color: white;
+    padding: 0.5rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    pointer-events: none; /* Crucial: permite interactuar con los elementos debajo */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.calorie-tooltip p {
+    margin: 0;
+    line-height: 1.2;
 }
 
 /* ------------------ BUSCADOR Y REGISTRO ------------------ */

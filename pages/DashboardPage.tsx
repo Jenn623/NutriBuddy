@@ -11,31 +11,95 @@ import CalorieSummaryPanel from '../components/common/CalorieSummaryPanel';
 import MacroBarChart from '../components/charts/MacroBarChart';
 
 // Componente simulado para el historial de barras (basado en el mockup)
-const CalorieHistoryChart: React.FC<{ data: any[] }> = ({ data }) => {
+const CalorieHistoryChart: React.FC<{ data: any[], onSave: () => void, isInfoAvailable: boolean }> = ({ data, onSave, isInfoAvailable }) => {
+
+    // ⭐️ NUEVO ESTADO: Para controlar el tooltip (valor y posición)
+    const [tooltip, setTooltip] = useState<{ visible: boolean, calories: number, date: string, x: number, y: number }>({
+        visible: false,
+        calories: 0,
+        date: '',
+        x: 0,
+        y: 0,
+    });
 
     // Función para imprimir el mensaje en consola
     const handleViewHistory = () => {
         console.log("Viendo historial");
     };
 
+    const handleSaveNutriInfo = () => {
+        // Ventana de confirmación
+        if (window.confirm("Seguro que desea guardar esta NutriInformación?")) {
+            onSave(); // Llama a la función de guardar del componente padre
+        }
+    };
+
+    // ⭐️ FUNCIÓN: Mostrar Tooltip al pasar el mouse sobre la barra
+    const handleMouseEnter = (d: any, event: React.MouseEvent<HTMLDivElement>) => {
+        setTooltip({
+            visible: true,
+            calories: d.calories,
+            date: d.day,
+            // Posición del ratón para el tooltip
+            x: event.clientX,
+            y: event.clientY,
+        });
+    };
+
+    // ⭐️ FUNCIÓN: Ocultar Tooltip
+    const handleMouseLeave = () => {
+        setTooltip(prev => ({ ...prev, visible: false }));
+    };
+
     return (
-        // Contenedor que ayuda a controlar el layout interno (CSS)
         <div className="history-chart-mock-container"> 
-            <h3 className="chart-title">Calorías últimos días</h3>
+            <h3 className="chart-title">Calories last 5 days</h3>
             
             <div className="bar-chart-visualization">
-                {/* Visualización de barras */}
-                {data.map(d => (
-                    <div key={d.day} className="bar" style={{ height: `${(d.calories / data[2].calories) * 80}px` }}>
-                        {d.day === 'Today' ? 'Today' : ''}
-                    </div>
-                ))}
+                {isInfoAvailable ? (
+                    // Mostrar las barras si hay historial
+                    data.map((d, index) => (
+                        // ⭐️ CAMBIO CRÍTICO: Nuevo contenedor para Barra + Etiqueta ⭐️
+                        <div key={index} className="bar-column"
+                        onMouseEnter={(e) => handleMouseEnter(d, e)}
+                        onMouseLeave={handleMouseLeave}> 
+                            {/* Barra */}
+                            <div 
+                                className="bar" 
+                                // El factor de altura se basa en el máximo del historial + un margen para evitar barras del 100%
+                                style={{ height: `${(d.calories / (data.reduce((max, h) => Math.max(max, h.calories), 1) + 100)) * 80}px` }}
+                            >
+                                {/* El texto de las kcal dentro de la barra si es necesario: */}
+                                {/* {d.calories} */} 
+                            </div>
+                            {/* Etiqueta de la Fecha */}
+                            <span className="bar-label">{d.day}</span>
+                        </div>
+                    ))
+                ) : (
+                    <div className="no-history-message">NutriInformación no disponible</div>
+                )}
             </div>
+
+            {/* ⭐️ COMPONENTE TOOLTIP (Renderizado Condicional) ⭐️ */}
+            {tooltip.visible && (
+                <div 
+                    className="calorie-tooltip"
+                    style={{ left: tooltip.x + 10, top: tooltip.y + 10 }} // Añadir desplazamiento
+                >
+                    <p>Fecha: {tooltip.date}</p>
+                    <p>Consumo: <strong>{tooltip.calories} kcal</strong></p>
+                </div>
+            )}
             
-            {/* NUEVO: Botón "Ver historial" */}
-            <button onClick={handleViewHistory} className="view-history-btn">
-                Ver historial
-            </button>
+            <div className="history-buttons-group"> {/* Contenedor para ambos botones */}
+                <button onClick={handleSaveNutriInfo} className="save-info-btn">
+                    Guardar NutriInfo
+                </button>
+                <button onClick={handleViewHistory} className="view-history-btn">
+                    Ver historial
+                </button>
+            </div>
         </div>
     );
 };
@@ -74,7 +138,9 @@ const DashboardPage: React.FC = () => {
         addFood, 
         removeFood,
         motivationalMessage, 
-        foodCatalog, 
+        foodCatalog,
+        saveDailyRecord,
+        history, 
         historyData,
         macroConsumed,
         macroGoals 
@@ -108,7 +174,7 @@ const DashboardPage: React.FC = () => {
                 
                 {/* 1. Header (NutriBuddy y Configuración) */}
                 <DashboardHeader />
-                <h2 className="dashboard-title">Dashboard</h2>
+                <h2 className="dashboard-title">Hola de nuevo, {user.name}</h2>
                 
                 <div className="dashboard-grid">
                     
@@ -195,7 +261,10 @@ const DashboardPage: React.FC = () => {
 
                 {/* 3. Gráfica de Historial (Lado Superior Derecho del Mockup) */}
                 <div className="history-panel full-width-panel">
-                    <CalorieHistoryChart data={historyData} />
+                    <CalorieHistoryChart data={historyData}
+                        onSave={saveDailyRecord}
+                        isInfoAvailable={history.length > 0}
+                    />
                 </div>
                 
             </div>
