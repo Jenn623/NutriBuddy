@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 // NUEVO: Importar el Dashboard
 import DashboardPage from './pages/DashboardPage'; 
+import HistoryPage from './pages/HistoryPage';
 
 import { AuthProvider } from './Context/AuthContext'; 
 
@@ -22,6 +23,8 @@ const App: React.FC = () => {
           
           {/* NUEVA RUTA: Para la pantalla principal */}
           <Route path="/dashboard" element={<DashboardPage />} /> 
+
+          <Route path="/historial" element={<HistoryPage />} />
           
           {/* Redirección: En un proyecto real, esto redirigiría a /login si no está autenticado. 
              Por ahora, sigue enviando a /login. */}

@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
     const { calculateGoals } = useCalorieCalculator();
 
     // Función de REGISTRO
-    const register = (userData: Omit<User, 'id' | 'calorieGoal'>): boolean => {
+    const register = (userData: Omit<User, 'id' | 'calorieGoal' | 'macroGoals'>): boolean => {
         // Validación de existencia (el nombre debe ser único)
         if (localStorage.getItem(userData.name)) {
             console.error('El nombre de usuario ya existe.');
@@ -51,10 +51,21 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
         const realCalorieGoal = goals.tdee; // TDEE calculado
 
         // Crea el objeto User completo
-        const newUser: User = {
+        /*const newUser: User = {
             ...userData,
             id: userData.name, // Usamos el nombre como ID único
             calorieGoal: realCalorieGoal,
+        };*/
+
+        const newUser: User = {
+            ...userData,
+            id: userData.name, 
+            calorieGoal: goals.tdee, 
+            macroGoals: { // ⭐️ GUARDAMOS LAS METAS CALCULADAS AQUÍ ⭐️
+                proteinG: goals.proteinG,
+                carbsG: goals.carbsG,
+                fatG: goals.fatG
+            }
         };
 
         try {

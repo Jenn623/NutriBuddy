@@ -13,6 +13,9 @@ import MacroBarChart from '../components/charts/MacroBarChart';
 // Componente simulado para el historial de barras (basado en el mockup)
 const CalorieHistoryChart: React.FC<{ data: any[], onSave: () => void, isInfoAvailable: boolean }> = ({ data, onSave, isInfoAvailable }) => {
 
+
+    const navigate = useNavigate(); // <--- Usamos useNavigate
+
     // ⭐️ NUEVO ESTADO: Para controlar el tooltip (valor y posición)
     const [tooltip, setTooltip] = useState<{ visible: boolean, calories: number, date: string, x: number, y: number }>({
         visible: false,
@@ -25,6 +28,7 @@ const CalorieHistoryChart: React.FC<{ data: any[], onSave: () => void, isInfoAva
     // Función para imprimir el mensaje en consola
     const handleViewHistory = () => {
         console.log("Viendo historial");
+        navigate('/historial');
     };
 
     const handleSaveNutriInfo = () => {

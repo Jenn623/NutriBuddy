@@ -3,6 +3,13 @@
 export type Gender = 'male' | 'female';
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'intense';
 
+// Definición de las Metas de Macronutrientes (en gramos)
+export interface MacroGoals {
+    proteinG: number;
+    carbsG: number;
+    fatG: number;
+}
+
 // tipo de datos necesitados en el registro
 export interface User {
     // para identificar al usuario
@@ -19,4 +26,5 @@ export interface User {
 
     // meta calorica (calculada con el TDEE)
     calorieGoal: number;
+    macroGoals: MacroGoals;
 }

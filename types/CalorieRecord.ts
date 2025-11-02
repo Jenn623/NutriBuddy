@@ -1,4 +1,6 @@
 // src/types/CalorieRecord.ts
+import { ConsumedFood } from "../hooks/useDailyTracker";
+
 export interface DailyRecord {
     date: string; // Formato YYYY-MM-DD
     caloriesConsumed: number;
@@ -8,7 +10,7 @@ export interface DailyRecord {
         fatG: number;
     };
     // Opcional: Podrías guardar la lista detallada de alimentos consumidos
-     //foods: ConsumedFood[]; 
+     foods: ConsumedFood[]; 
 }
 
 // La clave en LocalStorage será prefijada con el nombre del usuario

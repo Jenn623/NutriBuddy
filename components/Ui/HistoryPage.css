@@ -1,0 +1,164 @@
+/* src/pages/HistoryPage.css */
+
+/* ======================================= */
+/* CONTENEDOR PRINCIPAL Y CARD */
+/* ======================================= */
+
+.history-page-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+}
+
+.history-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 1000px;
+}
+
+.history-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin: 1rem 0;
+}
+
+/* ------------------ FILTROS ------------------ */
+
+.history-filters {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.date-input {
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex-grow: 1;
+    max-width: 300px;
+}
+
+.filter-btn {
+    padding: 0.6rem 1.5rem;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* ======================================= */
+/* GRID DE CONTENIDO */
+/* ======================================= */
+
+.history-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas principales */
+    gap: 1.5rem;
+}
+
+/* ------------------ LADO IZQUIERDO: DETALLES ------------------ */
+
+.details-panel {
+    border: 1px solid #eee;
+    border-radius: 0.75rem;
+    padding: 1rem;
+}
+
+.selected-date-display {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.food-item-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.food-name {
+    color: #555;
+}
+
+.food-calories {
+    font-weight: 600;
+}
+
+.progress-area {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Alinea el progreso a la derecha */
+    gap: 1rem;
+    margin: 1.5rem 0;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.circular-chart-wrapper {
+    /* Contenedor del gráfico, asumimos que CalorieCircularChart maneja el tamaño */
+    transform: scale(0.8); /* Lo hacemos un poco más pequeño para que quepa */
+}
+
+.excess-message {
+    color: #cc0000;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding-top: 1rem;
+}
+
+/* ------------------ LADO DERECHO: GRÁFICAS ------------------ */
+
+.summary-area {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.macro-history-panel {
+    border: 1px solid #eee;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    height: 300px; /* Altura fija para el gráfico */
+}
+
+.history-message {
+    border: 1px solid #eee;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    height: 150px; /* Altura del panel de mensajes */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.chart-placeholder {
+    color: #aaa;
+    font-style: italic;
+    text-align: center;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .history-grid {
+        grid-template-columns: 1fr;
+    }
+}
