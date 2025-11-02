@@ -2,7 +2,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { FoodItem, initialFoodList } from '../services/foodData';
 import { useCalorieCalculator } from './useCalorieCalculator';
-import { User } from '../types/User';
+import { User }  from '../types/User';
 import { DailyRecord, UserHistory } from '../types/CalorieRecord';
 
 // Interfaz para un registro de alimento consumido
@@ -13,11 +13,32 @@ export interface ConsumedFood {
 }
 
 const HISTORY_KEY_PREFIX = 'nutri_history_';
+const DAILY_CONSUMED_KEY_PREFIX = 'nutri_daily_consumed_'; // Nueva clave para el estado temporal
+
+// Helper para obtener la fecha de hoy
+//const getTodayDate = () => new Date().toISOString().split('T')[0];
+
+// Helper para obtener la fecha de hoy (Ajustada a la zona horaria local)
+const getTodayDate = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
 
 export const useDailyTracker = (user: User) => {
     // Lista de alimentos consumidos hoy (simulados)
     const { calorieGoal } = user;
     const [consumedList, setConsumedList] = useState<ConsumedFood[]>([]);
+
+    //const [consumedList, setConsumedList] = useState<ConsumedFood[]>(initializeConsumedList);
+
+    const dailyKey = DAILY_CONSUMED_KEY_PREFIX + user.name;
+    const historyKey = HISTORY_KEY_PREFIX + user.name;
+
+    // ⭐️ NUEVO ESTADO: Historial de los últimos 5 días
+    const [history, setHistory] = useState<UserHistory>([]);
     
     // ⭐️ NUEVO: Inicializar el hook de cálculo para obtener las METAS de MACROS
     const { calculateGoals } = useCalorieCalculator();
@@ -29,11 +50,8 @@ export const useDailyTracker = (user: User) => {
         return goals;
     }, [user, calculateGoals]);
 
-    // ⭐️ NUEVO ESTADO: Historial de los últimos 5 días
-    const [history, setHistory] = useState<UserHistory>([]);
-
     // ⭐️ EFECTO: Carga el historial del usuario al iniciar
-    useEffect(() => {
+    /*useEffect(() => {
         const key = HISTORY_KEY_PREFIX + user.name;
         const storedHistory = localStorage.getItem(key);
         if (storedHistory) {
@@ -41,11 +59,62 @@ export const useDailyTracker = (user: User) => {
             const parsedHistory: UserHistory = JSON.parse(storedHistory);
             setHistory(parsedHistory.slice(-5));
         }
-    }, [user.name]);
+    }, [user.name]);*/
+
+        // ⭐️ EFECTO 1: Carga y Persistencia del Consumo Diario (y Reset)
+    // ⭐️ EFECTO 1: Carga y Persistencia del Consumo Diario (y Reset)
+    useEffect(() => {
+        const storedDailyData = localStorage.getItem(dailyKey);
+        const storedHistoryData = localStorage.getItem(historyKey);
+        
+        // 1. Cargar Historial (5 días)
+        if (storedHistoryData) {
+            const parsedHistory: UserHistory = JSON.parse(storedHistoryData);
+            setHistory(parsedHistory.slice(-5));
+        }
+
+        if (storedDailyData) {
+            const { date, list } = JSON.parse(storedDailyData);
+            
+            // 2. Comprobar si es un NUEVO DÍA
+            if (date === getTodayDate()) {
+                // Mismo día: Cargar datos guardados
+                setConsumedList(list);
+            } else {
+                // Nuevo día: Borrar el estado diario. El estado queda como [] (vacío).
+                localStorage.removeItem(dailyKey);
+            }
+        }
+        
+        // Función de limpieza: Guarda el estado de consumedList ANTES de que el componente se desmonte
+        const handleBeforeUnload = () => {
+            localStorage.setItem(dailyKey, JSON.stringify({
+                date: getTodayDate(),
+                list: consumedList,
+            }));
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        
+        // Guardar el estado al desmontar el componente (por ejemplo, al hacer logout)
+        return () => {
+            handleBeforeUnload();
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [user.name, dailyKey, historyKey]);
+
+    // ⭐️ EFECTO 2: Persistencia cuando cambia la lista (para logout/navegación dentro de la app)
+    useEffect(() => {
+        // Guarda el estado actual de consumedList en cada cambio (necesario para la navegación interna)
+        localStorage.setItem(dailyKey, JSON.stringify({
+            date: getTodayDate(),
+            list: consumedList,
+        }));
+    }, [consumedList, dailyKey]);
 
 
     // ⭐️ FUNCIÓN: Guardar el registro del día y actualizar el historial
-    const saveDailyRecord = (): boolean => {
+    /*const saveDailyRecord = (): boolean => {
         const today = new Date().toISOString().split('T')[0];
         
         // Evitar guardar si ya existe un registro para hoy (simulación)
@@ -74,7 +143,8 @@ export const useDailyTracker = (user: User) => {
         // setConsumedList([]); 
         
         return true;
-    };
+    };*/
+
 
     // ⭐️ MODIFICACIÓN: historyData ahora usa el historial real
     const historyData = useMemo(() => {
@@ -129,6 +199,41 @@ export const useDailyTracker = (user: User) => {
             },
         };
     }, [consumedList]);
+
+    // ⭐️ FUNCIÓN: Guardar el registro del día y actualizar el historial (SOBRESCRIBIR/ACTUALIZAR)
+    const saveDailyRecord = (): boolean => {
+        const today = getTodayDate();
+        
+        // 1. Crear el nuevo registro del día actual
+        const newRecord: DailyRecord = {
+            date: today,
+            caloriesConsumed: totalConsumed,
+            macrosConsumed: totalMacros,
+        };
+        
+        // 2. Actualizar/Sobreescribir el registro en el historial (si la fecha coincide)
+        let updatedHistory: UserHistory;
+        
+        const existingIndex = history.findIndex(record => record.date === today);
+
+        if (existingIndex !== -1) {
+            // Caso A: Existe un registro para hoy -> SOBREESCRIBIR
+            updatedHistory = history.map((record, index) => 
+                index === existingIndex ? newRecord : record
+            );
+        } else {
+            // Caso B: Es un nuevo registro para hoy -> AÑADIR y limitar a 5
+            updatedHistory = [...history, newRecord].slice(-5);
+        }
+        
+        // 3. Guardar en LocalStorage y actualizar el estado
+        localStorage.setItem(historyKey, JSON.stringify(updatedHistory));
+        setHistory(updatedHistory);
+        
+        // 4. No resetear el consumedList (se permite seguir agregando hoy)
+        
+        return true;
+    };
 
     // Lógica para el mensaje motivacional 
     const motivationalMessage = useMemo(() => {
