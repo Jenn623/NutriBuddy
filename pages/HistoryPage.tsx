@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useAuth } from '../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { DailyRecord } from '../types/CalorieRecord';
+import type { DailyRecord } from '../types/CalorieRecord';
 import DashboardHeader from '../components/common/DashboardHeader';
 import MacroBarChart from '../components/charts/MacroBarChart'; 
 import CalorieCircularChart from '../components/charts/CalorieCircularChart'; 
@@ -41,14 +41,14 @@ const HistoryPage: React.FC = () => {
 
     // ⭐️ SIMULACIÓN DE DETALLES DE ALIMENTOS (BASADO EN EL MOCKUP) ⭐️
     // Esto es un mock ya que no guardamos los detalles en DailyRecord
-    const mockFoodDetails = [
+    /*const mockFoodDetails = [
         { name: "Sandwich", quantity: 0, calories: 350 },
         { name: "Apple", quantity: 150, calories: 78 },
         { name: "Scrambled Eggs", quantity: 0, calories: 160 },
         { name: "Fried Chicken", quantity: 200, calories: 400 },
-    ];
+    ];*/
     
-    const totalMockCalories = mockFoodDetails.reduce((sum, f) => sum + f.calories, 0);
+    //const totalMockCalories = mockFoodDetails.reduce((sum, f) => sum + f.calories, 0);
 
 
     // Manejador del cambio de fecha
@@ -76,22 +76,23 @@ const HistoryPage: React.FC = () => {
                 <div className="history-grid">
                     
                     {/* LADO IZQUIERDO: Detalles de Alimentos y Progreso Circular */}
-                    <div className="details-panel">
-                        {/* Fecha seleccionada */}
-                        <h3 className="selected-date-display">{selectedDate}</h3>
+    <div className="details-panel">
+        <h3 className="selected-date-display">{selectedDate}</h3>
 
-                        {selectedRecord ? (
-                            <>
-                                {/* Lista de Alimentos (MOCKUP) */}
-                                <div className="food-list-details">
-                                    {/* Mapear los alimentos simulados, o reales si se guardaron */}
-                                    {mockFoodDetails.map((food, index) => (
-                                        <div key={index} className="food-item-row">
-                                            <span className="food-name">{food.name} {food.quantity > 0 && `• ${food.quantity} g`}</span>
-                                            <span className="food-calories">{food.calories} kcal</span>
-                                        </div>
-                                    ))}
-                                </div>
+        {selectedRecord ? (
+            <>
+                {/* ⭐️ CAMBIO CRÍTICO: Usar los alimentos guardados ⭐️ */}
+                <div className="food-list-details">
+                    {/* Usar los alimentos guardados en el registro del día */}
+                    {selectedRecord.foodsConsumedList?.map((entry, index) => (
+                        <div key={index} className="food-item-row">
+                            <span className="food-name">
+                                {entry.food.name} • {entry.quantityG} g
+                            </span>
+                            <span className="food-calories">{entry.totalCalories} kcal</span>
+                        </div>
+                    ))}
+                </div>
 
                                 {/* Gráfico Circular y Exceso */}
                                 <div className="progress-area">
@@ -123,7 +124,7 @@ const HistoryPage: React.FC = () => {
                             {selectedRecord && userMacroGoals ? (
                                 <MacroBarChart 
                                     consumed={selectedRecord.macrosConsumed}
-                                    goals={userMacroGoals} // Asumimos que guardamos las metas en el usuario para simplificar
+                                    goals={currentUser.macroGoals} // Asumimos que guardamos las metas en el usuario para simplificar
                                 />
                             ) : (
                                 <p className="chart-placeholder">Selecciona una fecha para ver los macros.</p>

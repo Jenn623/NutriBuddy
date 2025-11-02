@@ -209,10 +209,11 @@ export const useDailyTracker = (user: User) => {
             date: today,
             caloriesConsumed: totalConsumed,
             macrosConsumed: totalMacros,
+            foodsConsumedList: consumedList,
         };
         
         // 2. Actualizar/Sobreescribir el registro en el historial (si la fecha coincide)
-        let updatedHistory: UserHistory;
+        /*let updatedHistory: UserHistory;
         
         const existingIndex = history.findIndex(record => record.date === today);
 
@@ -228,12 +229,29 @@ export const useDailyTracker = (user: User) => {
         
         // 3. Guardar en LocalStorage y actualizar el estado
         localStorage.setItem(historyKey, JSON.stringify(updatedHistory));
+        setHistory(updatedHistory);*/
+
+        let updatedHistory: UserHistory;
+        const existingIndex = history.findIndex(record => record.date === today);
+
+        if (existingIndex !== -1) {
+             // Caso A: Existe un registro para hoy -> SOBREESCRIBIR
+             updatedHistory = history.map((record, index) => 
+                 index === existingIndex ? newRecord : record
+             );
+        } else {
+             // Caso B: Es un nuevo registro para hoy -> AÑADIR y limitar a 5
+             updatedHistory = [...history, newRecord].slice(-5);
+        }
+
+        localStorage.setItem(historyKey, JSON.stringify(updatedHistory));
         setHistory(updatedHistory);
         
         // 4. No resetear el consumedList (se permite seguir agregando hoy)
         
         return true;
     };
+    
 
     // Lógica para el mensaje motivacional 
     const motivationalMessage = useMemo(() => {
