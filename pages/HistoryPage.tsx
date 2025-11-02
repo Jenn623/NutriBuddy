@@ -121,7 +121,7 @@ const HistoryPage: React.FC = () => {
                     <div className="summary-area">
                         {/* 1. Gráfica de Macronutrientes */}
                         <div className="macro-history-panel">
-                            {selectedRecord && userMacroGoals ? (
+                            {selectedRecord && currentUser.macroGoals ? (
                                 <MacroBarChart 
                                     consumed={selectedRecord.macrosConsumed}
                                     goals={currentUser.macroGoals} // Asumimos que guardamos las metas en el usuario para simplificar
