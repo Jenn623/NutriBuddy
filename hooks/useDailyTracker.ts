@@ -1,9 +1,9 @@
 // src/hooks/useDailyTracker.ts
 import { useState, useMemo, useEffect } from 'react';
-import { FoodItem, initialFoodList } from '../services/foodData';
+import { type FoodItem, initialFoodList } from '../services/foodData';
 import { useCalorieCalculator } from './useCalorieCalculator';
-import { User }  from '../types/User';
-import { DailyRecord, UserHistory } from '../types/CalorieRecord';
+import type { User } from '../types/User';
+import type { DailyRecord, UserHistory } from '../types/CalorieRecord';
 
 // Interfaz para un registro de alimento consumido
 export interface ConsumedFood {
@@ -270,7 +270,7 @@ export const useDailyTracker = (user: User) => {
             lacking: ["Te faltan energías, ¡come algo nutritivo! 🍎", "Estás en déficit, puedes comer más.", "No olvides tu cena."],
         };
 
-        if (totalConsumed >= calorieGoal * 1.05) { // 10% de margen
+        if (totalConsumed >= calorieGoal * 1.02) { // 10% de margen
             return messages.passed[Math.floor(Math.random() * messages.passed.length)]; // Si se pasó [cite: 79-80]
         } else if (totalConsumed < calorieGoal * 0.8) {
             return messages.lacking[Math.floor(Math.random() * messages.lacking.length)]; // Si falta [cite: 81-82]

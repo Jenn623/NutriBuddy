@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'; // <--- Importamos useNavigate
 import { useAuth } from '../Context/AuthContext';
 import { useDailyTracker } from '../hooks/useDailyTracker';
 import DashboardPage from '../components/common/DashboardHeader';
-import { FoodItem } from '../services/foodData';
+import type { FoodItem } from '../services/foodData';
 import '../components/Ui/DashboardPage.css';
 import DashboardHeader from '../components/common/DashboardHeader';
 import CalorieSummaryPanel from '../components/common/CalorieSummaryPanel';

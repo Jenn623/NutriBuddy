@@ -14,6 +14,38 @@ const loadUserHistory = (userName: string): DailyRecord[] => {
     return stored ? JSON.parse(stored) : [];
 };
 
+// Lógica de mensajes específicos para el Historial (Retroalimentación de rendimiento pasado)
+const getHistoryMessage = (consumed: number, goal: number): string => {
+    const isExcess = consumed > goal * 1.05; // 5% de margen para exceso
+    const isLacking = consumed < goal * 0.8; // 20% de margen para déficit
+
+    const messages = {
+        good: [
+            "¡NutriBuddy dice: Estuviste en el punto! Tu consistencia es inspiradora. ✨",
+            "Resultado excelente. Tu cuerpo te agradece este día. ¡Sigue así!",
+            "Meta lograda. Recuerda este día de éxito y repite el proceso. 💪",
+        ],
+        excess: [
+            "Vemos que este día hubo un Superávit. Analiza tus elecciones y ajusta la próxima vez.",
+            "Hubo un desliz, pero NutriBuddy está aquí. Lo importante es el promedio semanal. ¡A por ello!",
+            "Recuerda que puedes hacerlo mejor. Usa la información de este día para planear tu futuro.",
+        ],
+        lacking: [
+            "El consumo de este día fue bajo. Asegúrate de darle a tu cuerpo la energía que necesita. 🍎",
+            "NutriBuddy te recuerda: ¡No te saltes comidas! La nutrición es combustible constante.",
+            "Identifica dónde podrías añadir más nutrición en este día. Tu energía es importante.",
+        ]
+    };
+
+    if (isExcess) {
+        return messages.excess[Math.floor(Math.random() * messages.excess.length)];
+    } else if (isLacking) {
+        return messages.lacking[Math.floor(Math.random() * messages.lacking.length)];
+    } else {
+        return messages.good[Math.floor(Math.random() * messages.good.length)];
+    }
+};
+
 const HistoryPage: React.FC = () => {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
@@ -55,6 +87,14 @@ const HistoryPage: React.FC = () => {
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(e.target.value);
     };
+
+    // ⭐️ CALCULAR EL MENSAJE DINÁMICO ⭐️
+    const dynamicHistoryMessage = useMemo(() => {
+        if (!selectedRecord) {
+            return "Selecciona una fecha con registros para ver tu Nutri-Retroalimentación.";
+        }
+        return getHistoryMessage(selectedRecord.caloriesConsumed, calorieGoal);
+    }, [selectedRecord, calorieGoal]);
 
     return (
         <div className="history-page-container">
@@ -133,7 +173,7 @@ const HistoryPage: React.FC = () => {
 
                         {/* 2. Panel de Mensajes (reutilizado del mockup) */}
                         <div className="message-panel history-message">
-                            <p className="motivational-text">Next time, you'll do better!</p>
+                            <p className="motivational-text">{dynamicHistoryMessage}</p>
                         </div>
                     </div>
                 </div>
