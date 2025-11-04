@@ -34,6 +34,69 @@
     border-bottom: 1px solid #eee;
 }
 
+/* ⭐️ NUEVO: Grupo de botones para alineación ⭐️ */
+.buttons-group-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Espacio entre los botones de regreso y configuración */
+}
+
+
+/* ⭐️ NUEVO: Estilo del botón de regreso ⭐️ */
+/*.back-btn {
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 10%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #333;
+    transition: background-color 0.2s;
+    margin-right: 1rem; /* Espacio antes del logo 
+}*/
+
+/* ⭐️ ESTILO BASE PARA ÍCONOS (Aplica a Regreso y Configuración) ⭐️ */
+.settings-icon-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #333;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-icon-btn:hover {
+    background-color: #f0f0f0;
+    border-radius: 20%; /* Añadimos un círculo sutil al pasar el mouse */
+}
+
+.back-btn:hover {
+    background-color: #f0f0f0;
+}
+
+/* Ajustamos el layout del header para acomodar el botón */
+.dashboard-header {
+    /* Usaremos flexbox para alinear el botón, logo, y el menú */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-info {
+    /* Asegura que el logo y el título sigan juntos */
+    display: flex;
+    align-items: center;
+}
+
 span{
     color: black;
 }
