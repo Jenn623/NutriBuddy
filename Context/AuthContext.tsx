@@ -1,8 +1,10 @@
 // src/context/AuthContext.tsx
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { User } from '../types/User'; // Asume que User.ts contiene la interfaz actualizada
 import { useCalorieCalculator } from '../hooks/useCalorieCalculator';
+
+const SESSION_KEY = 'nutri_session_user'; // Clave para guardar el nombre del usuario activo
 
 // 1. Definir la forma del Contexto de Autenticación
 interface AuthContextType {
@@ -35,8 +37,31 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
 
     // Nota: Por simplicidad y los requisitos del proyecto, el ID de usuario será el nombre.
 
+    // ⭐️ NUEVO ESTADO: Para evitar que el Dashboard intente renderizar antes de la carga ⭐️
+    const [isLoading, setIsLoading] = useState(true);
+
     // ⭐️ INICIALIZAMOS EL HOOK DE CÁLCULO
     const { calculateGoals } = useCalorieCalculator();
+
+    // ⭐️ EFECTO: Carga inicial de la sesión desde LocalStorage ⭐️
+    useEffect(() => {
+        const storedName = localStorage.getItem(SESSION_KEY);
+        
+        if (storedName) {
+            const storedUserData = localStorage.getItem(storedName);
+            if (storedUserData) {
+                // Si encontramos el usuario, lo cargamos en el estado
+                setCurrentUser(JSON.parse(storedUserData) as User);
+                console.log(`Sesión reestablecida para: ${storedName}`);
+            } else {
+                // Limpiar la clave si el usuario no existe (seguridad)
+                localStorage.removeItem(SESSION_KEY);
+            }
+        }
+        
+        // La carga ha terminado, permitimos que los componentes se rendericen
+        setIsLoading(false); 
+    }, []); // Array de dependencias vacío para que se ejecute solo al montar
 
     // Función de REGISTRO
     const register = (userData: Omit<User, 'id' | 'calorieGoal' | 'macroGoals'>): boolean => {
@@ -97,6 +122,9 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
         if (user.password === password) {
             setCurrentUser(user);
             console.log('Inicio de sesión exitoso:', user.name);
+            // ⭐️ GUARDAR EL NOMBRE EN LA CLAVE DE SESIÓN ACTIVA ⭐️
+            localStorage.setItem(SESSION_KEY, name); 
+            console.log('Inicio de sesión exitoso:', user.name);
             return true;
         } else {
             console.error('Fallo de inicio de sesión: Contraseña incorrecta.');
@@ -109,7 +137,15 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
         setCurrentUser(null);
         // También puedes limpiar cualquier token de sesión si existiera
         console.log('Sesión cerrada.');
+        // ⭐️ ELIMINAR LA CLAVE DE SESIÓN ACTIVA ⭐️
+        localStorage.removeItem(SESSION_KEY); 
+        console.log('Sesión cerrada.');
     };
+
+    // Si la aplicación está cargando la sesión, mostramos un indicador para evitar el contenido
+    if (isLoading) {
+        return <div className="auth-loading">Cargando sesión...</div>;
+    }
 
     const value = {
         currentUser,
