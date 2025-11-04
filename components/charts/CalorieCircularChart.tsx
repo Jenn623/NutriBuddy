@@ -8,19 +8,35 @@ interface CalorieCircularChartProps {
 
 const CalorieCircularChart: React.FC<CalorieCircularChartProps> = ({ current, max }) => {
     const consumedPercentage = Math.min(100, Math.round((current / max) * 100));
+
+    // ⭐️ LÓGICA DE COLOR ⭐️
+    const isExcess = current > max;
+    const ACTIVE_COLOR = isExcess ? '#cc0000' : '#10b981'; // Rojo para exceso, Verde para normal
+    const INACTIVE_COLOR = '#E0E0E0'; 
+    const COLORS = [ACTIVE_COLOR, INACTIVE_COLOR];
     
     // Calcular el valor restante (o el exceso)
-    const remainingValue = max > current ? max - current : 0;
-    const consumedValue = max > current ? current : max; // Mostrar solo hasta el 100% en el círculo principal
+    //const remainingValue = max > current ? max - current : 0;
+    //const consumedValue = max > current ? current : max; // Mostrar solo hasta el 100% en el círculo principal
 
+    // Ajustamos los valores para el gráfico:
+    let displayValue = current;
+    let remainingValue = max - current;
+
+    if (isExcess) {
+        // Si hay exceso, mostramos el anillo completo (100%) en rojo.
+        displayValue = max;
+        remainingValue = 0; 
+    }
+    
     // Datos para la gráfica de pastel (PieChart)
     const data = [
-        { name: 'Consumido', value: consumedValue },
+        { name: 'Consumido', value: displayValue },  //consumedValue
         { name: 'Restante', value: remainingValue },
     ];
     
     // Color de la celda: Verde para el consumo, gris para lo restante
-    const COLORS = ['#10b981', '#E0E0E0']; // Verde del mockup y Gris claro
+    //const COLORS = ['#10b981', '#E0E0E0']; // Verde del mockup y Gris claro
 
     // Manejo de la etiqueta central (porcentaje)
     const renderCustomLabel = ({ cx, cy }: any) => {

@@ -256,13 +256,21 @@ export const useDailyTracker = (user: User) => {
     // Lógica para el mensaje motivacional 
     const motivationalMessage = useMemo(() => {
         const difference = calorieGoal - totalConsumed;
+
+        // Convertimos a valor absoluto si es exceso
+        const excessAmount = Math.abs(difference);
+
         const messages = {
             good: ["¡Excelente! Estás logrando tus metas 💪", "Sigue así, NutriBuddy.", "¡Perfecto! Ya casi llegas a la meta."],
-            passed: ["Ups… mañana lo harás mejor 😅", "Te has pasado, ¡cuidado con el superávit!", "Hora de beber agua."],
+            passed: [
+            `¡Cuidado! Superaste tu límite por ${excessAmount} kcal. Intenta compensar mañana.`, 
+            `Te has pasado ${excessAmount} kcal. Recuerda que la consistencia es la clave.`,
+            `Alerta: Estás en Superávit calórico. ¡Mañana lo harás mejor!`,
+        ],
             lacking: ["Te faltan energías, ¡come algo nutritivo! 🍎", "Estás en déficit, puedes comer más.", "No olvides tu cena."],
         };
 
-        if (totalConsumed >= calorieGoal * 1.1) { // 10% de margen
+        if (totalConsumed >= calorieGoal * 1.05) { // 10% de margen
             return messages.passed[Math.floor(Math.random() * messages.passed.length)]; // Si se pasó [cite: 79-80]
         } else if (totalConsumed < calorieGoal * 0.8) {
             return messages.lacking[Math.floor(Math.random() * messages.lacking.length)]; // Si falta [cite: 81-82]
@@ -284,6 +292,7 @@ export const useDailyTracker = (user: User) => {
         addFood,
         removeFood,
         motivationalMessage,
+        calorieDifference: calorieGoal - totalConsumed,
         foodCatalog: initialFoodList,
         saveDailyRecord,
         history,

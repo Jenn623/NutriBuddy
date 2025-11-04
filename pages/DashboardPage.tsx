@@ -137,7 +137,7 @@ const DashboardPage: React.FC = () => {
 
     // Inicializamos el hook de seguimiento diario
     const { 
-        totalConsumed, 
+        totalConsumed,
         consumedList, 
         addFood, 
         removeFood,
@@ -187,6 +187,7 @@ const DashboardPage: React.FC = () => {
                         <CalorieSummaryPanel 
                             calorieGoal={calorieGoal} 
                             totalConsumed={totalConsumed}
+                            // ⭐️ PASAR EL NUEVO PROP AL COMPONENTE DE RESUMEN ⭐️
                         />
                     </div>
 
