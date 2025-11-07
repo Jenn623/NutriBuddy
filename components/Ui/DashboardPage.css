@@ -434,6 +434,19 @@ span{
 .food-entry-panel {
     grid-column: 1; /* Ocupa la primera columna */
     grid-row: 2; /* Fila 2 */
+
+    position: relative; /* CRÍTICO para que .search-results-wrapper (absolute) funcione */
+}
+
+.search-results-wrapper {
+    /*position: static;*/
+    /*width: 65%;*/       
+    z-index: 100;      
+    top: 100%; 
+    width: 100%;
+    /* ⭐️ CRÍTICO: El left/right para que ocupe el 100% de la columna ⭐️ */
+    left: 0;
+    right: 0;
 }
 
 /* NUEVA CLASE: Contenedor para el Input y el Botón de Añadir */
@@ -476,6 +489,11 @@ span{
     margin: 0.5rem 0;
     border: 1px solid #eee;
     border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    /* ⭐️ RESTRICCIÓN DE ALTURA Y SCROLL ⭐️ */
+    max-height: 130px; /* Altura máxima para unas 5 a 6 opciones */
+    overflow-y: auto; /* Activa el scroll interno */
 }
 
 .search-results-list li {
@@ -488,6 +506,10 @@ span{
     margin-top: 1rem;
     padding: 0;
     list-style: none;
+
+    /* ⭐️ RESTRICCIÓN DE ALTURA Y SCROLL ⭐️ */
+    max-height: 140px; /* Ajusta este valor (ej. 200px = ~4 o 5 filas) */
+    overflow-y: auto; /* Activa el scroll vertical cuando excede max-height */
 }
 
 .consumed-item {
