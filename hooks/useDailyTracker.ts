@@ -30,12 +30,31 @@ const getTodayDate = () => {
 export const useDailyTracker = (user: User) => {
     // Lista de alimentos consumidos hoy (simulados)
     const { calorieGoal } = user;
-    const [consumedList, setConsumedList] = useState<ConsumedFood[]>([]);
+    //const [consumedList, setConsumedList] = useState<ConsumedFood[]>([]);
 
     //const [consumedList, setConsumedList] = useState<ConsumedFood[]>(initializeConsumedList);
 
     const dailyKey = DAILY_CONSUMED_KEY_PREFIX + user.name;
     const historyKey = HISTORY_KEY_PREFIX + user.name;
+
+    // ⭐️ CAMBIO CRÍTICO: Inicialización Perezosa (Carga Síncrona) ⭐️
+    // Esta función se ejecuta SÓLO una vez y tiene acceso a 'user' y 'dailyKey'.
+    const [consumedList, setConsumedList] = useState<ConsumedFood[]>(() => {
+        const storedDailyData = localStorage.getItem(dailyKey);
+        
+        if (storedDailyData) {
+            const { date, list } = JSON.parse(storedDailyData);
+            
+            // 1. Comprobar si es el mismo día
+            if (date === getTodayDate()) {
+                return list as ConsumedFood[];
+            } 
+            // 2. Si es un nuevo día, eliminamos la clave antigua inmediatamente (cleanup)
+            localStorage.removeItem(dailyKey);
+        }
+        // Si no hay datos o es un nuevo día
+        return [];
+    });
 
     // ⭐️ NUEVO ESTADO: Historial de los últimos 5 días
     const [history, setHistory] = useState<UserHistory>([]);
@@ -63,7 +82,7 @@ export const useDailyTracker = (user: User) => {
 
         // ⭐️ EFECTO 1: Carga y Persistencia del Consumo Diario (y Reset)
     // ⭐️ EFECTO 1: Carga y Persistencia del Consumo Diario (y Reset)
-    useEffect(() => {
+    /*useEffect(() => {
         const storedDailyData = localStorage.getItem(dailyKey);
         const storedHistoryData = localStorage.getItem(historyKey);
         
@@ -101,7 +120,42 @@ export const useDailyTracker = (user: User) => {
             handleBeforeUnload();
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
-    }, [user.name, dailyKey, historyKey]);
+    }, [user.name, dailyKey, historyKey]);*/
+
+     // ⭐️ EFECTO 1: Carga el Historial (5 días) ⭐️
+    // Se ejecuta al montar para obtener los registros guardados
+    useEffect(() => {
+        const storedHistoryData = localStorage.getItem(historyKey);
+  
+        if (storedHistoryData) {
+            const parsedHistory: UserHistory = JSON.parse(storedHistoryData);
+            setHistory(parsedHistory.slice(-5));
+        }
+    }, [historyKey]);
+
+    // ⭐️ EFECTO 2: Persistencia (Guarda el estado actual al cambiar consumedList o al desmontar) ⭐️
+    useEffect(() => {
+        // Función de limpieza que se ejecuta al cambiar consumedList o antes de desmontar
+        const handleUnloadAndSave = () => {
+            localStorage.setItem(dailyKey, JSON.stringify({
+                date: getTodayDate(),
+                list: consumedList,
+            }));
+        };
+
+        // Listener para cierre de ventana/pestaña
+        window.addEventListener('beforeunload', handleUnloadAndSave);
+
+        // Guardar el estado cada vez que consumedList cambia (para navegación interna)
+        handleUnloadAndSave();
+     
+        // Cleanup: Eliminar el listener
+        return () => {
+            window.removeEventListener('beforeunload', handleUnloadAndSave);
+        };
+        
+        // Dependencia en consumedList asegura que el handler tenga el estado más reciente
+    }, [consumedList, dailyKey]);
 
     // ⭐️ EFECTO 2: Persistencia cuando cambia la lista (para logout/navegación dentro de la app)
     useEffect(() => {
