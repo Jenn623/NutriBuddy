@@ -80,10 +80,19 @@
     margin-bottom: 1rem;
 }
 
+.food-list-details {
+    /* Mantenemos los estilos de lista que ya tienes */
+    margin-bottom: 1rem; /* Espacio antes del total */
+    
+    /* ⭐️ RESTRICCIÓN DE ALTURA Y SCROLL INTERNO ⭐️ */
+    max-height: 320px; /* Altura máxima para aproximadamente 8 elementos */
+    overflow-y: auto; /* Activa el scroll vertical */
+}
+
 .food-item-row {
     display: flex;
     justify-content: space-between;
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.5rem;
     border-bottom: 1px dashed #eee;
 }
 

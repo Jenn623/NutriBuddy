@@ -4,7 +4,7 @@ import type { FoodItem } from '../services/foodData'; // Reutilizamos la interfa
  // Reutilizamos la interfaz FoodItem
 
 // 🚨 REEMPLAZA ESTO CON TU CLAVE REAL DEL USDA 🚨
-const USDA_API_KEY = ""; //3Xo043hve7ew4y46WKdEVkzPgv8m7iqKNenZL11X
+const USDA_API_KEY = "3Xo043hve7ew4y46WKdEVkzPgv8m7iqKNenZL11X"; //3Xo043hve7ew4y46WKdEVkzPgv8m7iqKNenZL11X
 const USDA_SEARCH_URL = "https://api.nal.usda.gov/fdc/v1/foods/search";
 
 // Función para mapear los datos detallados del USDA al formato FoodItem de tu app
