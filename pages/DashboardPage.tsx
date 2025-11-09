@@ -3,12 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // <--- Importamos useNavigate
 import { useAuth } from '../Context/AuthContext';
 import { useDailyTracker } from '../hooks/useDailyTracker';
-import DashboardPage from '../components/common/DashboardHeader';
+//import DashboardPage from '../components/common/DashboardHeader';
 import type { FoodItem } from '../services/foodData';
 import '../components/Ui/DashboardPage.css';
 import DashboardHeader from '../components/common/DashboardHeader';
 import CalorieSummaryPanel from '../components/common/CalorieSummaryPanel';
 import MacroBarChart from '../components/charts/MacroBarChart';
+import { useFoodSearch } from '../hooks/useHybridFoodSearch'; // ⭐️ NUEVO: Importar hook de búsqueda API
+
 
 // Componente simulado para el historial de barras (basado en el mockup)
 const CalorieHistoryChart: React.FC<{ data: any[], onSave: () => void, isInfoAvailable: boolean }> = ({ data, onSave, isInfoAvailable }) => {
@@ -142,7 +144,7 @@ const DashboardPage: React.FC = () => {
         addFood, 
         removeFood,
         motivationalMessage, 
-        foodCatalog,
+        //foodCatalog,
         saveDailyRecord,
         history, 
         historyData,
@@ -150,13 +152,61 @@ const DashboardPage: React.FC = () => {
         macroGoals 
     } = useDailyTracker(user); //calorieGoal
 
+    // ⭐️ INICIALIZAR HOOKS DE BÚSQUEDA ⭐️
+    //const { results: apiResults, searchFood, isLoading } = useFoodSearch();
+
+    // ⭐️ CAMBIO CRÍTICO 2: Inicializar el hook de búsqueda híbrida ⭐️
+    const { results: filteredFoods, hybridSearch, isLoading, error } = useFoodSearch();
+
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
 
+    // ⭐️ REEMPLAZO DE LÓGICA DE FILTRADO (Ahora usamos API) ⭐️
+    // 1. Efecto para llamar a la API cuando el término de búsqueda cambia
+    //useEffect(() => {
+        // Debounce: Solo busca si el término tiene al menos 3 caracteres
+        /*const timer = setTimeout(() => {
+            if (searchTerm.length >= 3) {
+                searchFood(searchTerm);
+            } else if (searchTerm.length === 0) {
+                // Limpiar resultados si el campo está vacío
+                searchFood(''); 
+            }
+        }, 300); // Espera 300ms antes de buscar
+        
+        return () => clearTimeout(timer);
+    }, [searchTerm]);*/ // La dependencia ahora es searchTerm
+
+    // 2. Los resultados son ahora la salida de la API
+    //const filteredFoods = apiResults;
+
     // Lógica de búsqueda [cite: 90-93]
-    const filteredFoods = foodCatalog.filter(food =>
+    /*const filteredFoods = foodCatalog.filter(food =>
         food.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+
+        // ⭐️ CAMBIO CRÍTICO 3: Lógica de Búsqueda con useEffect ⭐️
+    // Llamar al hook híbrido cuando el término de búsqueda cambia.
+    useEffect(() => {
+        // Debounce: Solo busca si el término tiene al menos 3 caracteres
+        const timer = setTimeout(() => {
+            // Usamos la función del hook para buscar localmente o con IA
+            hybridSearch(searchTerm);
+        }, 300); // Espera 300ms antes de buscar
+        
+        return () => clearTimeout(timer);
+    }, [searchTerm, hybridSearch]); // Dependencia clave: searchTerm y la función searchHybrid
+    );*/
+
+    // Lógica de Búsqueda con useEffect 
+    useEffect(() => {
+        // Debounce: Solo busca si el término tiene al menos 3 caracteres
+        const timer = setTimeout(() => {
+            // Llama a la función del hook para buscar localmente o con IA
+            hybridSearch(searchTerm);
+        }, 300); 
+        
+        return () => clearTimeout(timer);
+    }, [searchTerm, hybridSearch]);
 
     const handleSelectFood = (food: FoodItem) => {
         setSelectedFood(food);
@@ -204,38 +254,45 @@ const DashboardPage: React.FC = () => {
                     {/* 4. Buscador de Alimentos y Registro */}
                     <div className="food-entry-panel">
                         <h3 className="search-label">Search food...</h3>
-                        
-                        {/* CONTENEDOR FLEXIBLE PARA INPUT Y BOTÓN */}
-                        <div className="search-input-group"> 
-                            <input
-                                type="text"
-                                placeholder="Buscar alimento..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="food-search-input"
-                            />
-                            {/* El botón "Add food" se mantiene fijo aquí */}
-                            <button 
-                                onClick={handleAddFood} 
-                                className={`add-food-btn ${!selectedFood ? 'disabled' : ''}`}
-                                disabled={!selectedFood} // Deshabilita si no hay nada seleccionado
-                            >
-                                Add food
-                            </button>
-                        </div>
-                        
-                        {/* RESULTADOS DE LA BÚSQUEDA: ENVUELTO EN UN CONTENEDOR CON Z-INDEX */}
-                    <div className="search-results-wrapper"> 
-                        {searchTerm && filteredFoods.length > 0 && (
-                            <ul className="search-results-list">
-                                {filteredFoods.map(food => (
-                                    <li key={food.id} onClick={() => handleSelectFood(food)}>
-                                        {food.name} • {food.portionSizeG} g • {food.calories} kcal
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
+    
+    {/* CONTENEDOR FLEXIBLE PARA INPUT Y BOTÓN */}
+    <div className="search-input-group"> 
+        <input
+            type="text"
+            placeholder={isLoading ? "Consultando NutriIA..." : "Buscar alimento..."}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="food-search-input"
+            disabled={isLoading}
+        />
+        <button 
+            onClick={handleAddFood} 
+            className={`add-food-btn ${!selectedFood || isLoading ? 'disabled' : ''}`}
+            disabled={!selectedFood || isLoading} 
+        >
+            Add food
+        </button>
+    </div>
+    
+    {/* ⭐️ CAMBIO CRÍTICO: El wrapper de resultados es AHORA HERMANO del grupo de entrada ⭐️ */}
+    <div className="search-results-wrapper"> 
+        {error && (
+            <p className="search-error-message">{error}</p>
+        )}
+
+        {/* Renderizado de resultados y mensaje de IA */}
+        {(searchTerm.length > 0 && filteredFoods.length > 0) ? (
+            <ul className="search-results-list">
+                {filteredFoods.map(food => (
+                    <li key={food.id} onClick={() => handleSelectFood(food)}>
+                        {food.name} • {food.portionSizeG} g • {food.calories} kcal
+                    </li>
+                ))}
+            </ul>
+        ) : (searchTerm.length > 0 && !isLoading && !error && filteredFoods.length === 0) && (
+             <p className="search-info-message">Buscando con IA. Espera...</p>
+        )}
+    </div>
                         {/* Lista de Consumidos */}
                     <div className="consumed-list">
                         {/* ⭐️ CAMBIO CRÍTICO: Añadir función de eliminar por índice */}

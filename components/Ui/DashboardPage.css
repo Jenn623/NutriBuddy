@@ -439,9 +439,9 @@ span{
 }
 
 .search-results-wrapper {
-    /*position: static;*/
+    /*position: absolute;*/
     /*width: 65%;*/       
-    z-index: 100;      
+    z-index: 99;      
     top: 100%; 
     width: 100%;
     /* ⭐️ CRÍTICO: El left/right para que ocupe el 100% de la columna ⭐️ */
@@ -454,6 +454,9 @@ span{
     display: flex; /* Habilita flexbox para alinear elementos */
     gap: 0.5rem;   /* Espacio entre el input y el botón */
     margin-top: 0.5rem;
+
+     position: static; 
+    z-index: 101; /* Asegura que input/botón estén en la capa superior */
 }
 
 .food-search-input {
