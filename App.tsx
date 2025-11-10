@@ -11,27 +11,23 @@ import DashboardPage from './pages/DashboardPage';
 import HistoryPage from './pages/HistoryPage';
 
 import { AuthProvider } from './Context/AuthContext'; 
+import { ThemeProvider } from './Context/ThemeContext'; // <-- Importar ThemeProvider
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <AuthProvider> 
-        <Routes>
-          
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/registro" element={<RegisterPage />} />
-          
-          {/* NUEVA RUTA: Para la pantalla principal */}
-          <Route path="/dashboard" element={<DashboardPage />} /> 
-
-          <Route path="/historial" element={<HistoryPage />} />
-          
-          {/* Redirección: En un proyecto real, esto redirigiría a /login si no está autenticado. 
-             Por ahora, sigue enviando a /login. */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
-            
-        </Routes>
-      </AuthProvider>
+      {/* ⭐️ PASO CRÍTICO: Envuelve todo con ThemeProvider ⭐️ */}
+      <ThemeProvider> 
+        <AuthProvider> 
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/registro" element="/registro" element={<RegisterPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/historial" element={<HistoryPage />} />
+            <Route path="/" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 };

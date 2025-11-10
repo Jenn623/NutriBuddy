@@ -1,5 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell } from 'recharts';
+import { useTheme } from '../../Context/ThemeContext'; // <-- Importar useTheme
 
 interface CalorieCircularChartProps {
     current: number; // Calorías consumidas
@@ -7,31 +8,28 @@ interface CalorieCircularChartProps {
 }
 
 const CalorieCircularChart: React.FC<CalorieCircularChartProps> = ({ current, max }) => {
+    const { theme } = useTheme(); // Obtener el tema actual
+    
     const consumedPercentage = Math.min(100, Math.round((current / max) * 100));
 
-    // ⭐️ LÓGICA DE COLOR ⭐️
+    // Lógica de Color (Se mantiene: Rojo para exceso, Verde para normal)
     const isExcess = current > max;
-    const ACTIVE_COLOR = isExcess ? '#cc0000' : '#10b981'; // Rojo para exceso, Verde para normal
-    const INACTIVE_COLOR = '#E0E0E0'; 
+    const ACTIVE_COLOR = isExcess ? '#ff6b6b' : '#10b981'; // Rojo Brillante para Dark Mode
+    const INACTIVE_COLOR = theme === 'dark' ? '#3B4958' : '#E0E0E0'; // Gris más oscuro para Dark Mode
     const COLORS = [ACTIVE_COLOR, INACTIVE_COLOR];
     
-    // Calcular el valor restante (o el exceso)
-    //const remainingValue = max > current ? max - current : 0;
-    //const consumedValue = max > current ? current : max; // Mostrar solo hasta el 100% en el círculo principal
-
-    // Ajustamos los valores para el gráfico:
+    // ⭐️ COLOR DEL TEXTO CENTRAL ⭐️
+    const TEXT_COLOR = theme === 'dark' ? '#E6EEF8' : '#333'; 
+    
     let displayValue = current;
     let remainingValue = max - current;
-
     if (isExcess) {
-        // Si hay exceso, mostramos el anillo completo (100%) en rojo.
         displayValue = max;
         remainingValue = 0; 
     }
-    
-    // Datos para la gráfica de pastel (PieChart)
+
     const data = [
-        { name: 'Consumido', value: displayValue },  //consumedValue
+        { name: 'Consumido', value: displayValue },
         { name: 'Restante', value: remainingValue },
     ];
     
@@ -41,7 +39,7 @@ const CalorieCircularChart: React.FC<CalorieCircularChartProps> = ({ current, ma
     // Manejo de la etiqueta central (porcentaje)
     const renderCustomLabel = ({ cx, cy }: any) => {
         return (
-            <text x={cx} y={cy} dy={5} textAnchor="middle" fill="#333" fontSize="1.8rem" fontWeight="bold">
+            <text x={cx} y={cy} dy={5} textAnchor="middle" fill={TEXT_COLOR} fontSize="1.8rem" fontWeight="bold">
                 {consumedPercentage}%
             </text>
         );

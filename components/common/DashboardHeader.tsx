@@ -1,13 +1,17 @@
 // src/components/common/DashboardHeader.tsx
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext'; // Asumimos esta ruta
+import { useAuth } from '../../Context/AuthContext'; // Asumimos esta ruta
+import { useTheme } from '../../Context/ThemeContext'; // <-- Importar useTheme
 
 const DashboardHeader: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation(); // <-- Obtener la ubicación actual
+
+    // ⭐️ OBTENER TEMA Y TOGGLE ⭐️
+    const { theme, toggleTheme } = useTheme();
 
     // Determinar si estamos en la página de Historial o en alguna que NO sea Dashboard
     const showBackButton = location.pathname !== '/dashboard' && location.pathname !== '/login' && location.pathname !== '/registro';
@@ -20,6 +24,11 @@ const DashboardHeader: React.FC = () => {
     const handleBack = () => {
         // Simple función de regresar al Dashboard
         navigate('/dashboard'); 
+    };
+
+    const handleToggleTheme = () => {
+        toggleTheme();
+        setIsMenuOpen(false);
     };
 
     const handleMyProfile = () => {
@@ -61,7 +70,10 @@ const DashboardHeader: React.FC = () => {
                     
                     {isMenuOpen && (
                         <div className="settings-dropdown">
-                            <button onClick={() => { console.log("Navegando a Mi Perfil..."); setIsMenuOpen(false); }}>My Profile</button>
+                            {/* ⭐️ CAMBIO CRÍTICO: Botón de Dark/Light Mode ⭐️ */}
+                            <button onClick={handleToggleTheme}>
+                                {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                            </button>
                             <button onClick={handleLogout}>Log Out</button>
                         </div>
                     )}

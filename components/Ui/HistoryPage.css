@@ -165,6 +165,85 @@
     text-align: center;
 }
 
+/* DARK MODE SETTINGS*/
+
+/* ------------------ TARJETA Y FONDOS ------------------ */
+
+/* Estilos de la tarjeta principal (coincide con dashboard-card) */
+body.dark-mode .history-card {
+    background-color: #0F172A; /* Fondo de tarjeta oscuro */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .history-title,
+body.dark-mode .selected-date-display,
+body.dark-mode .total-row span {
+    color: #E6EEF8;
+}
+
+/* ------------------ FILTROS E INPUTS ------------------ */
+
+body.dark-mode .date-input {
+    background-color: #1F2A37;
+    border-color: #3B4958; /* Borde de gris oscuro/azul */
+    color: #E6EEF8;
+}
+
+body.dark-mode .date-input::placeholder {
+    color: #94A3B8;
+}
+
+body.dark-mode .filter-btn {
+    background-color: #10b981; /* Verde (color de acción) */
+    color: #0F172A; /* Texto oscuro en botón brillante */
+}
+
+/* ------------------ PANELES INTERNOS Y LISTA ------------------ */
+
+.details-panel,
+.macro-history-panel,
+.history-message {
+    border: 1px solid #eee;
+}
+
+body.dark-mode .details-panel,
+body.dark-mode .macro-history-panel,
+body.dark-mode .history-message {
+    background-color: #1F2A37;
+    border: 1px solid #1F2A37; /* Usar el mismo color del fondo del panel para un aspecto plano */
+}
+
+/* Texto de No Data */
+body.dark-mode .no-data-message,
+body.dark-mode .chart-placeholder {
+    color: #94A3B8;
+}
+
+/* ------------------ LISTA DE ALIMENTOS DETALLADA ------------------ */
+
+body.dark-mode .food-item-row {
+    border-bottom: 1px dashed #3B4958; /* Divisor más suave */
+}
+
+body.dark-mode .food-item-row span {
+    color: #E6EEF8;
+}
+
+body.dark-mode .food-item-row .food-name {
+    color: #94A3B8; /* Nombres de comida ligeramente más tenues */
+}
+
+/* ------------------ GRÁFICAS Y MENSAJES ------------------ */
+
+body.dark-mode .excess-message {
+    /* Mantener rojo brillante para alerta */
+    color: #FF6B6B; 
+}
+
+body.dark-mode .motivational-text {
+    color: #E6EEF8;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .history-grid {

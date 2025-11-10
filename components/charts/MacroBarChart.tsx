@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useTheme } from '../../Context/ThemeContext'; // <-- Importar useTheme
 
 interface MacroBarChartProps {
     consumed: { proteinG: number; carbsG: number; fatG: number; };
@@ -7,6 +8,12 @@ interface MacroBarChartProps {
 }
 
 const MacroBarChart: React.FC<MacroBarChartProps> = ({ consumed, goals }) => {
+
+    const { theme } = useTheme(); // Obtener el tema actual
+    
+    // Colores base para el Modo Oscuro
+    const AXIS_COLOR = theme === 'dark' ? '#94A3B8' : '#333'; // Gris claro para modo oscuro
+    const GRID_COLOR = theme === 'dark' ? '#3B4958' : '#ccc'; // Gris oscuro/azul para la cuadrícula
     
     // Estructurar los datos para la gráfica de barras
     const data = [
@@ -31,25 +38,29 @@ const MacroBarChart: React.FC<MacroBarChartProps> = ({ consumed, goals }) => {
         <div className="macro-chart-container">
             <h3 className="chart-title">MACRONUTRIENTS CONSUMED</h3>
             
-            {/* ResponsiveContainer asegura que el gráfico se ajuste al contenedor del panel */}
             <ResponsiveContainer width="100%" height={250}> 
                 <BarChart
                     data={data}
                     margin={{ top: 10, right: 10, left: -20, bottom: 5 }}
                 >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                    <XAxis dataKey="name" stroke="#333" />
-                    <YAxis unit="g" stroke="#333" />
+                    {/* Aplicar el color de la cuadrícula */}
+                    <CartesianGrid strokeDasharray="3 3" stroke={GRID_COLOR} vertical={false} />
+                    
+                    {/* Aplicar el color de los ejes */}
+                    <XAxis dataKey="name" stroke={AXIS_COLOR} fill={AXIS_COLOR} />
+                    <YAxis unit="g" stroke={AXIS_COLOR} fill={AXIS_COLOR} />
+                    
+                    {/* El Tooltip se controla con CSS, pero pasamos el estilo aquí si es necesario */}
                     <Tooltip 
+                        contentStyle={{ backgroundColor: theme === 'dark' ? '#1F2A37' : 'white', border: `1px solid ${GRID_COLOR}` }}
+                        itemStyle={{ color: AXIS_COLOR }}
                         formatter={(value, name) => [`${value}g`, name === 'Goal' ? 'Meta' : 'Consumido']}
                     />
                     <Legend iconType="square" verticalAlign="top" height={30} />
                     
-                    {/* Barras de Consumido (Verde) */}
-                    <Bar dataKey="Consumed" fill="#10b981" name="Consumido" />
-                    
-                    {/* Barras de Meta (Gris/Azul) */}
-                    <Bar dataKey="Goal" fill="#3b82f6" name="Meta" />
+                    {/* Barras: Mantenemos el color de acción (Verde/Azul) */}
+                    <Bar dataKey="Consumed" fill="#0BB35A" name="Consumido" />
+                    <Bar dataKey="Goal" fill="#60A5FA" name="Meta" />
                 </BarChart>
             </ResponsiveContainer>
         </div>
