@@ -91,6 +91,10 @@ body.dark-mode .form-container {
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
 
+body.dark-mode .form-container h1{
+    color: #E6EEF8;
+}
+
 /* Texto principal dentro de la tarjeta */
 body.dark-mode .form-container h2,
 body.dark-mode .form-container p,

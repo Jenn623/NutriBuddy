@@ -634,7 +634,7 @@ body.dark-mode .summary-divider {
 /* DASHBOARD HEADER */
 
 body.dark-mode .app-title{
-    color: #0bb35a; /* Título principal claro */
+    color: #10b981;
 }
 
 body.dark-mode .settings-dropdown {
@@ -673,6 +673,11 @@ body.dark-mode .view-history-btn:hover {
 /* ======================================= */
 
 @media (max-width: 768px) {
+
+    .dashboard-page-container{
+        width: 100%;
+    }
+
     .dashboard-grid {
         grid-template-columns: 1fr; /* Una sola columna en móvil */
     }
@@ -680,5 +685,65 @@ body.dark-mode .view-history-btn:hover {
     .food-entry-panel,
     .message-panel {
         grid-column: 1; 
+    }
+}
+
+@media (max-width: 768px) {
+    
+    .dashboard-card {
+        width: 100%;
+        padding: 1rem;
+        max-width: none;
+    }
+    
+    /* 1. Colapsar el Grid a una sola columna */
+    .dashboard-grid {
+        grid-template-columns: 1fr; /* ⭐️ Colapsa a una sola columna ⭐️ */
+        grid-template-rows: auto; /* Permite que el contenido se apile naturalmente */
+        gap: 1.5rem; /* Aumentamos el espacio entre los paneles apilados */
+    }
+
+    /* 2. Reestablecer el flujo (Todos los elementos ocupan la única columna) */
+    .summary-panel-wrapper,
+    .macro-panel,
+    .food-entry-panel,
+    .message-panel {
+        grid-column: 1 / 2;
+        grid-row: auto; /* Dejamos que se apilen por orden de aparición */
+    }
+
+    /* 3. Ajuste de Paneles Internos */
+    
+    /* Panel de Resumen: Apilamos el texto y el círculo para pantallas estrechas */
+    .summary-panel {
+        flex-direction: column; 
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .summary-info-left {
+        /* Permite que el texto ocupe todo el ancho antes de la gráfica */
+        text-align: center;
+        min-width: 100%;
+        order: 2; /* Coloca el texto de meta/consumo debajo de la gráfica */
+    }
+
+    .summary-chart-right {
+        order: 1; /* Coloca la gráfica arriba */
+        margin-bottom: 1rem;
+    }
+
+    /* Buscador: Aseguramos que el grupo de input ocupe el ancho completo */
+    .search-input-group {
+        flex-wrap: wrap; /* Permite que los elementos se muevan a la siguiente línea si es necesario */
+    }
+    
+    /* 4. Historial (El panel ancho debajo del Grid) */
+    .full-width-panel {
+        width: 90%; /* Ocupa el 100% en móvil */
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
     }
 }

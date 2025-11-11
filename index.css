@@ -89,6 +89,13 @@ body.dark-mode {
     color: #E0E0E0; /* Color de texto principal claro */
 }
 
+@media (max-width: 768px) {
+    
+    :root {
+        width: 100%;
+    }
+}
+
 /*.dashboard-page-container {
     background: #121212 !important; 
 }*/
