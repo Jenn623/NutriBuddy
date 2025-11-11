@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import LogoHeader from '../components/common/LogoHeader';
 import Input from '../components/common/Input';
 import Button from '../components/common/Buttons'; // Asumo que el archivo se llama 'Buttons.tsx'
-import { User, Gender, ActivityLevel } from '../types/User'; 
+import type { User, ActivityLevel } from '../types/User'; 
 // Importamos el archivo CSS de este componente
 import '../components/Ui/ResgisterPage.css'
 import { useAuth } from '../Context/AuthContext';

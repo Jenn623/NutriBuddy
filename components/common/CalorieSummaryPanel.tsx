@@ -4,10 +4,9 @@ import CalorieCircularChart from '../charts/CalorieCircularChart';
 interface CalorieSummaryPanelProps {
     calorieGoal: number;
     totalConsumed: number;
-    calorieDifference: number; // ⭐️ NUEVO PROP ⭐️
 }
 
-const CalorieSummaryPanel: React.FC<CalorieSummaryPanelProps> = ({ calorieGoal, totalConsumed, calorieDifference }) => {
+const CalorieSummaryPanel: React.FC<CalorieSummaryPanelProps> = ({ calorieGoal, totalConsumed }) => {
     
     return (
         <div className="summary-panel">

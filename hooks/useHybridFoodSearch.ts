@@ -1,7 +1,7 @@
 // src/hooks/useHybridFoodSearch.ts
 
 import { useState, useMemo, useCallback } from 'react';
-import { initialFoodList, FoodItem } from '../services/foodData';
+import { initialFoodList, type FoodItem } from '../services/foodData';
 import { v4 as uuidv4 } from 'uuid'; 
 
 // 🚨 REEMPLAZA ESTO CON TU CLAVE GEMINI API 🚨
@@ -57,7 +57,7 @@ export const useFoodSearch = () => {
 
     // Función para llamar al Gemini API y generar un nuevo alimento
     const searchAI = useCallback(async (query: string): Promise<FoodItem | null> => {
-        const systemPrompt = `Actúa como un experto en nutrición. Tu objetivo es generar la información nutricional (por 100g) de UN alimento específico. Si el alimento '${query}' no es un alimento común, usa el alimento más cercano. Si el alimento es una bebida, especifica el tamaño de la porción. La respuesta debe ser un objeto JSON que siga estrictamente el esquema proporcionado.`;
+        //const systemPrompt = `Actúa como un experto en nutrición. Tu objetivo es generar la información nutricional (por 100g) de UN alimento específico. Si el alimento '${query}' no es un alimento común, usa el alimento más cercano. Si el alimento es una bebida, especifica el tamaño de la porción. La respuesta debe ser un objeto JSON que siga estrictamente el esquema proporcionado.`;
         
         // ⭐️ CORRECCIÓN CRÍTICA: Estructura del PAYLOAD con 'generationConfig' ⭐️
         const payload = {

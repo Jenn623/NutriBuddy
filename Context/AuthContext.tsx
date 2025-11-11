@@ -1,7 +1,8 @@
 // src/context/AuthContext.tsx
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { User } from '../types/User'; // Asume que User.ts contiene la interfaz actualizada
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import type { User } from '../types/User'; // Asume que User.ts contiene la interfaz actualizada
+ // Asume que User.ts contiene la interfaz actualizada
 import { useCalorieCalculator } from '../hooks/useCalorieCalculator';
 
 const SESSION_KEY = 'nutri_session_user'; // Clave para guardar el nombre del usuario activo
@@ -26,10 +27,6 @@ export const useAuth = () => {
     return context;
 };
 
-// 3. Proveedor del Contexto (Lógica de Almacenamiento Local)
-interface AuthProviderProps {
-    children: ReactNode;
-}
 
 export const AuthProvider: React.FC<any> = ({ children }) => {
     // El estado mantendrá al usuario actualmente logueado
@@ -72,7 +69,7 @@ export const AuthProvider: React.FC<any> = ({ children }) => {
         }
 
         // ⭐️ CAMBIO CRÍTICO: CALCULAR METAS REALES
-        const goals = calculateGoals(userData); 
+        const goals = calculateGoals(userData as any); 
         const realCalorieGoal = goals.tdee; // TDEE calculado
 
         // Crea el objeto User completo

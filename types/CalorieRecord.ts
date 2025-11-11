@@ -1,6 +1,7 @@
 // src/types/CalorieRecord.ts
-import { ConsumedFood } from "../hooks/useDailyTracker";
-import { MacroGoals } from "./User";
+// src/types/CalorieRecord.ts
+import type { ConsumedFood } from "../hooks/useDailyTracker";
+import type { MacroGoals } from "./User";
 
 export interface DailyRecord {
     date: string; // Formato YYYY-MM-DD

@@ -69,7 +69,7 @@ const HistoryPage: React.FC = () => {
     , [userHistory, selectedDate]);
     
     const calorieGoal = currentUser.calorieGoal;
-    const userMacroGoals = currentUser.macroGoals; // ⭐️ OBTENER LA META DE MACROS DEL USUARIO ⭐️
+    //const userMacroGoals = currentUser.macroGoals; // ⭐️ OBTENER LA META DE MACROS DEL USUARIO ⭐️
 
     // ⭐️ SIMULACIÓN DE DETALLES DE ALIMENTOS (BASADO EN EL MOCKUP) ⭐️
     // Esto es un mock ya que no guardamos los detalles en DailyRecord

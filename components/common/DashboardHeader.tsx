@@ -31,12 +31,6 @@ const DashboardHeader: React.FC = () => {
         setIsMenuOpen(false);
     };
 
-    const handleMyProfile = () => {
-        console.log("Navegando a Mi Perfil...");
-        // navigate('/profile'); // (Ruta futura)
-        setIsMenuOpen(false);
-    };
-
     return (
         <div className="dashboard-header">
             

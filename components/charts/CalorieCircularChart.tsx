@@ -60,7 +60,7 @@ const CalorieCircularChart: React.FC<CalorieCircularChartProps> = ({ current, ma
                     endAngle={-270}
                     paddingAngle={0}
                 >
-                    {data.map((entry, index) => (
+                    {data.map((_, index) => (
                         <Cell 
                             key={`cell-${index}`} 
                             fill={COLORS[index % COLORS.length]} 

@@ -285,12 +285,7 @@ body.dark-mode .motivational-text {
     .date-input {
         max-width: none; /* Permite que el input ocupe el 100% del ancho */
     }
-
-    /* 4. Resumen de Detalles: Elementos flexibles */
-    .details-panel {
-        /* No se necesita cambiar la columna, ya que grid-template-columns: 1fr lo maneja */
-    }
-
+    
     .progress-area {
         /* Aseguramos que la gráfica circular (lado derecho del panel) se centre o se apile si es necesario */
         flex-direction: column; 

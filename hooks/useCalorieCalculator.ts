@@ -1,6 +1,7 @@
 // src/hooks/useCalorieCalculator.ts
 
-import { User, ActivityLevel } from '../types/User';
+// src/hooks/useCalorieCalculator.ts
+import type { User, ActivityLevel } from '../types/User';
 
 /**
  * Define la estructura de los objetivos nutricionales calculados.

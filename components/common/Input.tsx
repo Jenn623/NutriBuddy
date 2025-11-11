@@ -1,5 +1,5 @@
 // src/components/common/Input.tsx
-import React, { InputHTMLAttributes } from 'react';
+import React, { type InputHTMLAttributes } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     label?: string; // Aunque no se ve en el mockup, es buena práctica para accesibilidad
