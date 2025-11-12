@@ -36,7 +36,7 @@ const MacroBarChart: React.FC<MacroBarChartProps> = ({ consumed, goals }) => {
 
     return (
         <div className="macro-chart-container">
-            <h3 className="chart-title">MACRONUTRIENTS CONSUMED</h3>
+            <h3 className="chart-title">MACRONUTRIENTES CONSUMIDOS</h3>
             
             <ResponsiveContainer width="100%" height={250}> 
                 <BarChart

@@ -13,13 +13,13 @@ const CalorieSummaryPanel: React.FC<CalorieSummaryPanelProps> = ({ calorieGoal, 
             {/* LADO IZQUIERDO */}
             <div className="summary-info-left">
                 {/* Daily Caloric Intake y Meta */}
-                <span className="summary-label">Daily Caloric Intake</span>
+                <span className="summary-label">Ingesta diaria</span>
                 <h3 className="calorie-goal">{calorieGoal} kcal</h3>
                 
                 <hr className="summary-divider" /> {/* Línea divisora */}
                 
                 {/* Today's Intake y Consumo Actual */}
-                <span className="summary-label">Today's Intake</span>
+                <span className="summary-label">Ingesta del día</span>
                 <h3 className="calorie-consumed">{totalConsumed} kcal</h3>
             </div>
 

@@ -43,7 +43,7 @@ const LoginPage: React.FC = () => {
                 
                 <LogoHeader 
                     title="NutriBuddy"
-                    subtitle="Track your daily intake with ease!"
+                    subtitle="¡Controla tu ingesta diaria fácilmente!"
                 />
                 
                 <form onSubmit={handleLogin} className="form-content">
@@ -51,7 +51,7 @@ const LoginPage: React.FC = () => {
                     <Input 
                         type="text"
                         name="name"
-                        placeholder="Your name"
+                        placeholder="Usuario"
                         value={credentials.name}
                         onChange={handleChange}
                         required
@@ -61,21 +61,21 @@ const LoginPage: React.FC = () => {
                     <Input 
                         type="password" 
                         name="password"
-                        placeholder="Password"
+                        placeholder="Contraseña"
                         value={credentials.password}
                         onChange={handleChange}
                         required
                     />
 
                     <Button type="submit" className="submit-button">
-                        LOGIN
+                        Iniciar Sesión
                     </Button>
                 </form>
                 
                 <p className="register-link-text">
-                    Don't have an account? 
+                    ¿No tienes una cuenta? 
                     <a onClick={handleRegisterClick} className="register-link">
-                        Register
+                        Regístrate
                     </a>
                 </p>
             </div>

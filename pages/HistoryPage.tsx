@@ -100,7 +100,7 @@ const HistoryPage: React.FC = () => {
         <div className="history-page-container">
             <div className="history-card">
                 <DashboardHeader /> 
-                <h2 className="history-title">History</h2>
+                <h2 className="history-title">Historial</h2>
                 
                 <div className="history-filters">
                     <input 
@@ -110,7 +110,7 @@ const HistoryPage: React.FC = () => {
                         className="date-input"
                         max={new Date().toISOString().split('T')[0]} // No permite fechas futuras
                     />
-                    <button className="filter-btn">FILTER</button>
+                    {/*<button className="filter-btn">FILTER</button>*/}
                 </div>
 
                 <div className="history-grid">
@@ -143,7 +143,7 @@ const HistoryPage: React.FC = () => {
                                         />
                                     </div>
                                     {selectedRecord.caloriesConsumed > calorieGoal && (
-                                        <div className="excess-message">Excess detected</div>
+                                        <div className="excess-message">Exceso detectado</div>
                                     )}
                                 </div>
                                 

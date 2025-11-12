@@ -75,7 +75,7 @@ const RegisterPage: React.FC = () => {
                 {/* Encabezado con logo */}
                 <LogoHeader 
                     title="NutriBuddy"
-                    subtitle="Register to start tracking!"
+                    subtitle="¡Regístrate para comenzar el NutriSeguimiento!"
                 />
                 
                 <form onSubmit={handleSubmit} className="form-content">
@@ -83,7 +83,7 @@ const RegisterPage: React.FC = () => {
                     <Input 
                         type="text" 
                         name="name" 
-                        placeholder="Name" 
+                        placeholder="Usuario" 
                         onChange={handleChange} 
                         required 
                     />
@@ -93,7 +93,7 @@ const RegisterPage: React.FC = () => {
                         <Input 
                             type="number" 
                             name="age" 
-                            placeholder="Age" 
+                            placeholder="Edad" 
                             min="1" 
                             onChange={handleChange} 
                             required 
@@ -101,7 +101,7 @@ const RegisterPage: React.FC = () => {
                         <Input 
                             type="number" 
                             name="weightKg" 
-                            placeholder="Weight (kg)" 
+                            placeholder="Peso (kg)" 
                             step="0.1" 
                             onChange={handleChange} 
                             required 
@@ -111,20 +111,20 @@ const RegisterPage: React.FC = () => {
                     {/* Fila: Sexo y Altura */}
                     <div className="form-row">
                         <select 
-                            name="gender" 
+                            name="Sexo" 
                             onChange={handleChange} 
                             className="form-select-half" 
                             defaultValue="" 
                             required
                         >
                             <option value="" disabled>Sex</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="male">Masculino</option>
+                            <option value="female">Femenino</option>
                         </select>
                         <Input 
                             type="number" 
                             name="heightCm" 
-                            placeholder="Height (cm)" 
+                            placeholder="Altura (cm)" 
                             min="1" 
                             onChange={handleChange} 
                             required 
@@ -151,27 +151,27 @@ const RegisterPage: React.FC = () => {
                         <Input 
                             type="password" 
                             name="password"
-                            placeholder="Password"
+                            placeholder="Contraseña"
                             onChange={handleChange}
                             required
                         />
                         <Input 
                             type="password"
                             name="confirmPassword"
-                            placeholder="Confirm Password"
+                            placeholder="Confirmar contraseña"
                             onChange={handleChange}
                             required
                         />
                     </div>
 
-                    <Button type="submit" className="submit-button">SUBMIT</Button>
+                    <Button type="submit" className="submit-button">REGISTRARSE</Button>
                 </form>
                 
                 {/* Enlace de Login */}
                 <p className="login-link-text">
-                    Already have an account? 
+                    ¿Ya tienes una cuenta? 
                     <a href="/login" className="login-link">
-                        Login
+                        Iniciar Sesión
                     </a>
                 </p>
             </div>

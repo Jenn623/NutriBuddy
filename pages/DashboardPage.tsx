@@ -59,7 +59,7 @@ const CalorieHistoryChart: React.FC<{ data: any[], onSave: () => void, isInfoAva
 
     return (
         <div className="history-chart-mock-container"> 
-            <h3 className="chart-title">Calories last 5 days</h3>
+            <h3 className="chart-title">Últimos 5 días</h3>
             
             <div className="bar-chart-visualization">
                 {isInfoAvailable ? (
@@ -161,41 +161,6 @@ const DashboardPage: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
 
-    // ⭐️ REEMPLAZO DE LÓGICA DE FILTRADO (Ahora usamos API) ⭐️
-    // 1. Efecto para llamar a la API cuando el término de búsqueda cambia
-    //useEffect(() => {
-        // Debounce: Solo busca si el término tiene al menos 3 caracteres
-        /*const timer = setTimeout(() => {
-            if (searchTerm.length >= 3) {
-                searchFood(searchTerm);
-            } else if (searchTerm.length === 0) {
-                // Limpiar resultados si el campo está vacío
-                searchFood(''); 
-            }
-        }, 300); // Espera 300ms antes de buscar
-        
-        return () => clearTimeout(timer);
-    }, [searchTerm]);*/ // La dependencia ahora es searchTerm
-
-    // 2. Los resultados son ahora la salida de la API
-    //const filteredFoods = apiResults;
-
-    // Lógica de búsqueda [cite: 90-93]
-    /*const filteredFoods = foodCatalog.filter(food =>
-        food.name.toLowerCase().includes(searchTerm.toLowerCase())
-
-        // ⭐️ CAMBIO CRÍTICO 3: Lógica de Búsqueda con useEffect ⭐️
-    // Llamar al hook híbrido cuando el término de búsqueda cambia.
-    useEffect(() => {
-        // Debounce: Solo busca si el término tiene al menos 3 caracteres
-        const timer = setTimeout(() => {
-            // Usamos la función del hook para buscar localmente o con IA
-            hybridSearch(searchTerm);
-        }, 300); // Espera 300ms antes de buscar
-        
-        return () => clearTimeout(timer);
-    }, [searchTerm, hybridSearch]); // Dependencia clave: searchTerm y la función searchHybrid
-    );*/
 
     // Lógica de Búsqueda con useEffect 
     useEffect(() => {
@@ -253,7 +218,7 @@ const DashboardPage: React.FC = () => {
 
                     {/* 4. Buscador de Alimentos y Registro */}
                     <div className="food-entry-panel">
-                        <h3 className="search-label">Search food...</h3>
+                        <h3 className="search-label">Buscando alimento...</h3>
     
     {/* CONTENEDOR FLEXIBLE PARA INPUT Y BOTÓN */}
     <div className="search-input-group"> 
